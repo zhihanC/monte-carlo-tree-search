@@ -82,20 +82,20 @@ def parse_args():
 
 def play_game(game, player1, player2, show=False):
     """Plays a game then returns the final state."""
-    
+
     ### check to see if there is a tree and attempt to load it
     if (isinstance(player1, MCTSPlayerExtended)):
         try:
-            with open('mcst_extended.pkl', 'rb') as file:
-                player1.nodes = pickle.loads(file)
+            with open('mcts_extended.pkl', 'rb') as file:
+                player1.nodes = pickle.load(file)
                 print("tree successfully loaded")
             file.close()
         except (EOFError, FileNotFoundError) as error:
             print(error)
     elif (isinstance(player2, MCTSPlayerExtended)):
         try:
-            with open('mcst_extended.pkl', 'rb') as file:
-                player2.nodes = pickle.loads(file)
+            with open('mcts_extended.pkl', 'rb') as file:
+                player2.nodes = pickle.load(file)
                 print("tree successfully loaded")
             file.close()
         except (EOFError, FileNotFoundError) as error:
@@ -124,16 +124,16 @@ def play_game(game, player1, player2, show=False):
     ### save tree
     if (isinstance(player1, MCTSPlayerExtended)):
         try:
-            with open('mcst_extended.pkl', 'wb') as file:
-                pickle.dumps(player1.nodes, file)
+            with open('mcts_extended.pkl', 'wb') as file:
+                pickle.dump(player1.nodes, file)
                 print("tree successfully saved")
             file.close()
         except (EOFError, FileNotFoundError) as error:
             print(error)
     elif (isinstance(player2, MCTSPlayerExtended)):
         try:
-            with open('mcst_extended.pkl', 'wb') as file:
-                pickle.dumps(player2.nodes, file)
+            with open('mcts_extended.pkl', 'wb') as file:
+                pickle.dump(player2.nodes, file)
                 print("tree successfully saved")
             file.close()
         except (EOFError, FileNotFoundError) as error:
