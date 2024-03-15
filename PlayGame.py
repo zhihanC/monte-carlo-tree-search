@@ -13,7 +13,8 @@ from Breakthrough import Breakthrough
 from Mancala import Mancala
 from Nim import Nim
 from BasicPlayers import HumanPlayer, RandomPlayer
-from MonteCarloTreeSearch import MCTSPlayer
+from MonteCarloTreeSearch import MCTSPlayer, MCTSPlayerExtended
+import pickle
 
 games = {"hex":HexGame,
          "mancala":Mancala,
@@ -22,7 +23,8 @@ games = {"hex":HexGame,
 
 players = {"random":RandomPlayer,
            "human":HumanPlayer,
-           "mcts":MCTSPlayer}
+           "mcts":MCTSPlayer,
+           "mctsExt":MCTSPlayerExtended}
 
 def main():
     args = parse_args()
@@ -80,6 +82,25 @@ def parse_args():
 
 def play_game(game, player1, player2, show=False):
     """Plays a game then returns the final state."""
+    
+    ### check to see if there is a tree and attempt to load it
+    if (isinstance(player1, MCTSPlayerExtended)):
+        try:
+            with open('mcst_extended.pkl', 'rb') as file:
+                player1.nodes = pickle.loads(file)
+                print("tree successfully loaded")
+            file.close()
+        except (EOFError, FileNotFoundError) as error:
+            print(error)
+    elif (isinstance(player2, MCTSPlayerExtended)):
+        try:
+            with open('mcst_extended.pkl', 'rb') as file:
+                player2.nodes = pickle.loads(file)
+                print("tree successfully loaded")
+            file.close()
+        except (EOFError, FileNotFoundError) as error:
+            print(error)
+
     while not game.isTerminal:
         if show:
             print(game)
@@ -99,6 +120,25 @@ def play_game(game, player1, player2, show=False):
             print((player1.name if game.winner == 1 else player2.name)+") wins")
         else:
             print("it's a draw")
+
+    ### save tree
+    if (isinstance(player1, MCTSPlayerExtended)):
+        try:
+            with open('mcst_extended.pkl', 'wb') as file:
+                pickle.dumps(player1.nodes, file)
+                print("tree successfully saved")
+            file.close()
+        except (EOFError, FileNotFoundError) as error:
+            print(error)
+    elif (isinstance(player2, MCTSPlayerExtended)):
+        try:
+            with open('mcst_extended.pkl', 'wb') as file:
+                pickle.dumps(player2.nodes, file)
+                print("tree successfully saved")
+            file.close()
+        except (EOFError, FileNotFoundError) as error:
+            print(error)
+
     return game
 
 if __name__ == "__main__":
